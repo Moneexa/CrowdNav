@@ -13,6 +13,7 @@ mqttClient = None
 mqttQueue = []
 
 def on_message(client, userdata, message):
+    print("message received")
     # we deserialize each message that comes from mqtt and store it in a queue
     mqttQueue.append(json.loads(message.payload.decode('utf-8')))
 
@@ -21,9 +22,13 @@ def connect():
     if Config.kafkaUpdates:
         try:
             global consumer
-            consumer = KafkaConsumer(bootstrap_servers=Config.kafkaHost,
+            consumer = KafkaConsumer(bootstrap_servers="glider.srvs.cloudkafka.com:9094",
+                                     sasl_plain_username="ejmgtktq",
+                                     sasl_plain_password="eB71RaFxPqhECa5ojKD9_Zu0MAw3_62K",
                                      value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                                      group_id=None,
+                                     sasl_mechanism="SCRAM-SHA-512",
+                                     security_protocol="SASL_SSL",
                                      consumer_timeout_ms=100)
             consumer.subscribe([Config.kafkaCommandsTopic])
             print(Fore.GREEN + '# KafkaConnector OK!' + Fore.RESET)

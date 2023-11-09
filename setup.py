@@ -17,6 +17,5 @@ setup(
         'kafka-python',
         'Dijkstar',
         'paho-mqtt',
-        'flask'
     ]
 )

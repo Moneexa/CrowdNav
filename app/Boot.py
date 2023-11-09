@@ -14,9 +14,9 @@ from colorama import Fore
 from app.sumo import SUMOConnector, SUMODependency
 import app.Config as Config
 import traci, sys, os
-import _thread
+# import thread
 import time
-from app.server import app
+from app.server.app import run_server
 
 
 # uuid4()
@@ -47,7 +47,7 @@ def start(processID, parallelMode,useGUI):
     Network.loadNetwork()
     info(Fore.GREEN + "# Map loading OK! " + Fore.RESET)
     info(Fore.CYAN + "# Nodes: " + str(Network.nodesCount()) + " / Edges: " + str(Network.edgesCount()) + Fore.RESET)
-    server_thread= threading.Thread(target=app.runServer)
+    server_thread= threading.Thread(target=run_server)
     server_thread.start()
     info("\n ### server started")
 

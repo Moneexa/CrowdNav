@@ -12,12 +12,12 @@ mqttHost = "localhost"
 mqttPort = "1883"
 
 # the topic we send the kafka messages to
-kafkaTopicTrips = "crowd-nav-trips"
-kafkaTopicPerformance = "crowd-nav-performance"
-kafkaTopicRouting = "crowd-nav-routing"
+kafkaTopicTrips = "ejmgtktq-crowd-nav-trips"
+kafkaTopicPerformance = "ejmgtktq-crowd-nav-performance"
+kafkaTopicRouting = "ejmgtktq-crowd-nav-routing"
 
 # where we receive system changes
-kafkaCommandsTopic = "crowd-nav-commands"
+kafkaCommandsTopic = "ejmgtktq-crowd-nav-commands"
 
 # True if we want to use the SUMO GUI (always of in parallel mode)
 sumoUseGUI = True  # False

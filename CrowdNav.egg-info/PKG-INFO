@@ -1,11 +1,10 @@
-Metadata-Version: 2.1
+Metadata-Version: 1.0
 Name: CrowdNav
 Version: 0.2
 Summary: UNKNOWN
 Home-page: UNKNOWN
+Author: UNKNOWN
+Author-email: UNKNOWN
 License: UNKNOWN
+Description: RealTime Simulation in SUMO
 Platform: UNKNOWN
-License-File: LICENSE
-
-RealTime Simulation in SUMO
-

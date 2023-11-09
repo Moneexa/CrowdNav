@@ -1,72 +1,79 @@
-from flask import Flask, jsonify, request
-from werkzeug.serving import run_simple
+from ..entitiy.CarRegistry import CarRegistry
+import json
+from bottle import Bottle, request, response
 
-app = Flask(__name__)
 
-from app.entitiy.CarRegistry import CarRegistry
-from app.routing.CustomRouter import CustomRouter
+from ..routing.CustomRouter import CustomRouter
+app = Bottle()
 
-# Example route for a basic endpoint
 @app.route('/')
+def index():
+    return 'Hello, this is the root endpoint!'
 
-@app.route('/monitor', methods=['GET'])
+@app.route('/monitor', method='GET')
 def get_monitor_data():
-    attributes= {'totalCarCounter': CarRegistry.totalCarCounter, 'totalTripAverage': CarRegistry.totalTripAverage, 'totalTripAvg': CarRegistry.totalTripOverheadAverage}
+    attributes = {
+        'totalCarCounter': CarRegistry.totalCarCounter,
+        'totalTripAverage': CarRegistry.totalTripAverage,
+        'totalTripOverheadAverage': CarRegistry.totalTripOverheadAverage
+    }
     data = attributes
-    return jsonify(data) 
+    response.content_type = 'application/json'
+    return json.dumps(data)
 
-@app.route('/monitor_schema', methods=['GET'])
+@app.route('/monitor_schema', method='GET')
 def get_monitor_schema_data():
     schema = {
-      "type": "object",
-      "properties": {
-                "totalCarCounter": {"type": "integer"},
-                "totalTripAverage": {"type": "number"},
-                "totalTripOverheadAverage": {"type": "number"}
-        }
-    }
-
-    return jsonify(schema)
-
-@app.route('/adaptions_options', methods=['GET'])
-def get_adaption_options():
-    attributes= {
-                   'averageEdgeDurationFactor': CustomRouter.averageEdgeDurationFactor, 
-                   'explorationPercentage': CustomRouter.explorationPercentage, 
-                   'freshnessCutOffValue': CustomRouter.freshnessCutOffValue, 
-                   'freshnessUpdateFactor': CustomRouter.freshnessUpdateFactor, 
-                   'maxSpeedAndLengthFactor': CustomRouter.maxSpeedAndLengthFactor,
-                   'reRouteEverTicks': CustomRouter.reRouteEveryTicks,
-                   'routeRandomSigma': CustomRouter.routeRandomSigma 
-                }
-    data = attributes
-    return jsonify(data) 
-
-@app.route('/adaptions_options_schema', methods=['GET'])
-def get_adaptions_options_schema():
-    schema= {
         "type": "object",
         "properties": {
-                "averageEdgeDurationFactor": {"type": "number"},
-                 "explorationPercentage": {"type": "number"},
-                 "freshnessCutOffValue": {"type": "integer"},
-                 "freshnessUpdateFactor": {"type": "integer"},
-                 "maxSpeedAndLengthFactor": {"type": "number"},
-                 "reRouteEveryTicks": {"type": "integer"},
-                 "routeRandomSigma": {"type": "number"}
-            }     
+            "totalCarCounter": {"type": "integer"},
+            "totalTripAverage": {"type": "number"},
+            "totalTripOverheadAverage": {"type": "number"}
+        }
     }
-    return jsonify(schema)
+    response.content_type = 'application/json'
+    return json.dumps(schema)
 
-@app.route('/execute_schema', methods=['GET'])
+@app.route('/adaptions_options', method='GET')
+def get_adaption_options():
+    attributes = {
+        'averageEdgeDurationFactor': CustomRouter.averageEdgeDurationFactor,
+        'explorationPercentage': CustomRouter.explorationPercentage,
+        'freshnessCutOffValue': CustomRouter.freshnessCutOffValue,
+        'freshnessUpdateFactor': CustomRouter.freshnessUpdateFactor,
+        'maxSpeedAndLengthFactor': CustomRouter.maxSpeedAndLengthFactor,
+        'reRouteEveryTicks': CustomRouter.reRouteEveryTicks,
+        'routeRandomSigma': CustomRouter.routeRandomSigma
+    }
+    response.content_type = 'application/json'
+    return json.dumps(attributes)
+
+@app.route('/adaptions_options_schema', method='GET')
+def get_adaptions_options_schema():
+    schema = {
+        "type": "object",
+        "properties": {
+            "averageEdgeDurationFactor": {"type": "number"},
+            "explorationPercentage": {"type": "number"},
+            "freshnessCutOffValue": {"type": "integer"},
+            "freshnessUpdateFactor": {"type": "integer"},
+            "maxSpeedAndLengthFactor": {"type": "number"},
+            "reRouteEveryTicks": {"type": "integer"},
+            "routeRandomSigma": {"type": "number"}
+        }
+    }
+    response.content_type = 'application/json'
+    return json.dumps(schema)
+
+@app.route('/execute_schema', method='GET')
 def get_execute_schema():
-    return jsonify({"type":"object", "properties":{
-       "message": "string",
-    }})
+    schema = {"type": "object", "properties": {"message": "string"}}
+    response.content_type = 'application/json'
+    return json.dumps(schema)
 
-@app.route('/execute', methods=['PUT'])
+@app.route('/execute', method='PUT')
 def adapt_values():
-    data = request.get_json() # Assuming the client sends JSON data
+    data = json.load(request.body)  # Assuming the client sends JSON data
 
     # Define the keys you expect to be updated
     expected_keys = [
@@ -105,11 +112,8 @@ def adapt_values():
     else:
         message = "Some values were not updated, using previous values"
 
-    return jsonify({"message": message})
+    response.content_type = 'application/json'
+    return json.dumps({"message": message})
 
-def index():
-    return 'Hello, this is the root endpoint!'
-
-
-def runServer():
-    run_simple( 'localhost', 5000, app, use_reloader=False, use_debugger=True)
+def run_server():
+    app.run(host='localhost', port=5000, reloader=False, debug=True)
