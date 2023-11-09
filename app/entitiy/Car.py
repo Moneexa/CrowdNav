@@ -128,7 +128,6 @@ class Car:
                     # print(e)
                     pass
                 except traci.exceptions.TraCIException as e:
-                    # print(e)
                     pass
 
         roadID = traci.vehicle.getSubscriptionResults(self.id)[80]

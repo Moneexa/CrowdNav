@@ -16,6 +16,7 @@ setup(
         'colorama',
         'kafka-python',
         'Dijkstar',
-        'paho-mqtt'
+        'paho-mqtt',
+        'flask'
     ]
 )

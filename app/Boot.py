@@ -1,4 +1,5 @@
 import os, sys
+import threading
 
 from app.streaming import RTXConnector
 
@@ -8,13 +9,14 @@ from app.logging import info
 from app.routing.CustomRouter import CustomRouter
 from app.network.Network import Network
 from app.simulation.Simulation import Simulation
-from streaming import RTXForword
+from app.streaming import RTXForword
 from colorama import Fore
-from sumo import SUMOConnector, SUMODependency
-import Config
+from app.sumo import SUMOConnector, SUMODependency
+import app.Config as Config
 import traci, sys, os
-import thread
+import _thread
 import time
+from app.server import app
 
 
 # uuid4()
@@ -45,6 +47,9 @@ def start(processID, parallelMode,useGUI):
     Network.loadNetwork()
     info(Fore.GREEN + "# Map loading OK! " + Fore.RESET)
     info(Fore.CYAN + "# Nodes: " + str(Network.nodesCount()) + " / Edges: " + str(Network.edgesCount()) + Fore.RESET)
+    server_thread= threading.Thread(target=app.runServer)
+    server_thread.start()
+    info("\n ### server started")
 
     # After the network is loaded, we init the router
     CustomRouter.init()

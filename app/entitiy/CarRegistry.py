@@ -29,7 +29,7 @@ class CarRegistry(object):
     totalTripOverheadAverage = 0
 
     # @todo on shortest path possible -> minimal value
-
+    
     @classmethod
     def applyCarCounter(cls):
         """ syncs the value of the carCounter to the SUMO simulation """
